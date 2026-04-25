@@ -39,7 +39,7 @@ public class Calendar {
                         String time = day.trim().substring(day.indexOf("("), day.indexOf(")"));
                         String[] times = time.split("-");
                         int index = Integer.parseInt(day.trim().substring(0,1));
-                        Day newDay = new Day(index, times[0], times[1], true);
+                        Day newDay = new Day(index, times[0], times[1]);
                         slot.editDay(newDay);
                     }
                 }
