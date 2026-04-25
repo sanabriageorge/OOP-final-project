@@ -12,8 +12,8 @@ public class Slot {
     public Slot(String title, Day[] days, String description) {
         this.uuid = UUID.randomUUID().toString();
         this.title = title;
-        for(int i = 0; i<days.length; i++) {
-            this.days[days[i].index - 1] = days[i];
+        for(Day day : days) {
+            this.days[day.index - 1] = day;
         }
         this.description = description;
     }
@@ -22,22 +22,14 @@ public class Slot {
         this.title = newTitle;
     }
 
-    public void editDays(int[] days) {
-        // clear days
-        for(int i = 0; i < this.days.length; i++) {
-            this.days[i] = false;
-        }
-
-        // set new days
-        for(int i = 0; i < days.length; i++) {
-            this.days[days[i] - 1] = true;
-        }
+    public void editDay(Day day) {
+        this.days[day.index - 1] = day;
     }
 
-    public void editTime(String start, String end) {
-        this.startTime = start;
-        this.endTime = end;
+    public void removeDay(int dayIndex) {
+        this.days[dayIndex - 1] = null;
     }
+
 
     public void editDescription(String newDescription) {
         this.description = newDescription;
