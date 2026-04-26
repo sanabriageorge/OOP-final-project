@@ -56,7 +56,7 @@ public class Calendar {
 
     // simplfiying the print calendar to print from 8am-8pm
     public static void printCalendar() {
-        String calendar = "Time\t| \tSun\t| \tMon\t| \tTue\t| \tWed\t| \tThu\t| \tFri\t| \tSat\t|\n";
+        String calendar = "Time\t|\tSun\t |\tMon\t |\tTue\t |\tWed\t |\tThu\t |\tFri\t |\tSat\t |\n";
         for(float hour = 8; hour <= 20; hour+=0.5) {
             calendar += BAR;
             calendar += formatTime(hour);
@@ -78,10 +78,10 @@ public class Calendar {
             for(Slot slot : slots) {
                 Day d = slot.days[day - 1];
                 if(d != null && slotTaken(d, hour)) {
-                    timeSlot += String.format("\t%s\t", slot.title);
+                    timeSlot += String.format("%-10s\t |", slot.title);
                 }
                 else {
-                    timeSlot += "\t \t";
+                    timeSlot += "\t \t |";
                 }
             }
         }
