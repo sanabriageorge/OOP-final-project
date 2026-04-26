@@ -80,18 +80,20 @@ public class Calendar {
         timeSlot += "\t|";
 
         for(int day = 1; day <= 7; day++) {
-            // finish here to check slots if slot here is taken
-            if(false) {
-                timeSlot += "\ttitle\t|";
-            }
-             else {
-                timeSlot += "\t \t|";
+            for(Slot slot : slots) {
+                Day d = slot.days[day - 1];
+                if(d != null && slotTaken(d, hour)) {
+                    timeSlot += String.format("\t%s\t", slot.title);
+                }
+                else {
+                    timeSlot += "\t \t";
+                }
             }
         }
         return timeSlot + "\n";
     }
 
-    private static float convertToFloat(String time) {
+    private static float formatTime(String time) {
         if(time.contains(":")) {
             String[] splitTime = time.split(":");
             float hour = Integer.parseInt(splitTime[0]);
@@ -105,11 +107,11 @@ public class Calendar {
         }
     }
 
-    private static String slotTaken(Day day, float time) {
+    private static Boolean slotTaken(Day day, float time) {
         if(day.startTime <= time && day.endTime > time) {
-            return day.day;
+            return true;
         }
-        return "";
+        return false;
     }
 }
 
