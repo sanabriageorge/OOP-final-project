@@ -4,7 +4,6 @@ public class MainTerminal {
   // we parse and turn this into a day for a slot
 
     public static void main(String[] args) {
-      // Example usage    
       Day day1 = new Day(1, "8:00", "10:00");
       Day day2 = new Day(3, "12:00", "14:00");
       Day[] temp = {day1, day2};
