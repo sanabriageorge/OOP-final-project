@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Calendar {
+    private static final String BAR = "-".repeat(121) + "\n";
     public static ArrayList<Slot> slots = new ArrayList<>();
 
     public static ArrayList<Slot> retrieveSlots() {
@@ -55,12 +56,14 @@ public class Calendar {
 
     // simplfiying the print calendar to print from 8am-8pm
     public static void printCalendar() {
-        String calendar = "Time\t| \tSun\t| \tMon\t| \tTue\t| \tWed\t| \tThu\t| \tFri\t| \tSat \t\n";
+        String calendar = "Time\t| \tSun\t| \tMon\t| \tTue\t| \tWed\t| \tThu\t| \tFri\t| \tSat\t|\n";
         for(float hour = 8; hour <= 12; hour+=0.5) {
+            calendar += BAR;
             calendar += formatTime(hour);
         }
 
         for(float hour = 1; hour <= 8; hour+=0.5) {
+            calendar += BAR;
             calendar += formatTime(hour);
         }
         System.out.println(calendar);
@@ -86,6 +89,27 @@ public class Calendar {
             }
         }
         return timeSlot + "\n";
+    }
+
+    private static float convertToFloat(String time) {
+        if(time.contains(":")) {
+            String[] splitTime = time.split(":");
+            float hour = Integer.parseInt(splitTime[0]);
+            if(Integer.parseInt(splitTime[1]) == 30) {
+                hour += 0.5;
+            }
+            return hour;
+        }
+        else {
+            return Integer.parseInt(time);
+        }
+    }
+
+    private static String slotTaken(Day day, float time) {
+        if(day.startTime <= time && day.endTime > time) {
+            return day.day;
+        }
+        return "";
     }
 }
 

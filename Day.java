@@ -1,8 +1,8 @@
 public class Day {
     int index;
     String day;
-    int startTime;
-    int endTime;
+    float startTime;
+    float endTime;
 
     public Day(int index, String startTime, String endTime) {
         this.index = index;
@@ -18,7 +18,10 @@ public class Day {
 
         if(startTime.contains(":")) {
             String[] time = startTime.split(":");
-            this.startTime = Integer.parseInt(time[0]) * 100 + Integer.parseInt(time[1]);
+            this.startTime = Integer.parseInt(time[0]);
+            if(Integer.parseInt(time[1]) == 30) {
+                this.startTime += 0.5;
+            }
         }
         else {
             this.startTime = Integer.parseInt(startTime) * 100;
@@ -26,7 +29,10 @@ public class Day {
 
         if(endTime.contains(":")) {
             String[] time = endTime.split(":");
-            this.endTime = Integer.parseInt(time[0]) * 100 + Integer.parseInt(time[1]);
+            this.endTime = Integer.parseInt(time[0]);
+            if(Integer.parseInt(time[1]) == 30) {
+                this.endTime += 0.5;
+            }
         }
         else {
             this.endTime = Integer.parseInt(endTime) * 100;
