@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Calendar {
+    private static final String BAR = "-".repeat(121) + "\n";
     public static ArrayList<Slot> slots = new ArrayList<>();
 
     public static ArrayList<Slot> retrieveSlots() {
@@ -53,4 +54,56 @@ public class Calendar {
         slots.remove(slot);
     }
 
+    // simplfiying the print calendar to print from 8am-8pm
+    public static void printCalendar() {
+        String calendar = "Time\t|\tSun\t |\tMon\t |\tTue\t |\tWed\t |\tThu\t |\tFri\t |\tSat\t |\n";
+        for(float hour = 8; hour <= 20; hour+=0.5) {
+            calendar += BAR;
+            calendar += formatTime(hour);
+        }
+        System.out.println(calendar);
+    }
+
+    private static String formatTime(float hour) {
+        String timeSlot = "";
+        if(hour % 1 == 0) {
+            timeSlot = (int)hour + ":00";
+        }
+        else {
+            timeSlot = (int)hour + ":30";
+        }
+        timeSlot += "\t|";
+
+        for(int day = 1; day <= 7; day++) {
+            for(Slot slot : slots) {
+                Day d = slot.days[day - 1];
+                if(d != null && slotTaken(d, hour)) {
+                    timeSlot += String.format("%-10s\t |", slot.title);
+                }
+                else {
+                    timeSlot += "\t \t |";
+                }
+            }
+        }
+        return timeSlot + "\n";
+    }
+
+    private static float formatTime(String time) {
+        if(time.contains(":")) {
+            String[] splitTime = time.split(":");
+            float hour = Integer.parseInt(splitTime[0]);
+            if(Integer.parseInt(splitTime[1]) == 30) {
+                hour += 0.5;
+            }
+            return hour;
+        }
+        else {
+            return Integer.parseInt(time);
+        }
+    }
+
+    private static boolean slotTaken(Day day, float time) {
+        return day.startTime <= time && day.endTime > time;
+    }
 }
+
