@@ -53,4 +53,39 @@ public class Calendar {
         slots.remove(slot);
     }
 
+    // simplfiying the print calendar to print from 8am-8pm
+    public static void printCalendar() {
+        String calendar = "Time\t| \tSun\t| \tMon\t| \tTue\t| \tWed\t| \tThu\t| \tFri\t| \tSat \t\n";
+        for(float hour = 8; hour <= 12; hour+=0.5) {
+            calendar += formatTime(hour);
+        }
+
+        for(float hour = 1; hour <= 8; hour+=0.5) {
+            calendar += formatTime(hour);
+        }
+        System.out.println(calendar);
+    }
+
+    private static String formatTime(float hour) {
+        String timeSlot = "";
+        if(hour % 1 == 0) {
+            timeSlot = (int)hour + ":00";
+        }
+        else {
+            timeSlot = (int)hour + ":30";
+        }
+        timeSlot += "\t|";
+
+        for(int day = 1; day <= 7; day++) {
+            // finish here to check slots if slot here is taken
+            if(false) {
+                timeSlot += "\ttitle\t|";
+            }
+             else {
+                timeSlot += "\t \t|";
+            }
+        }
+        return timeSlot + "\n";
+    }
 }
+
