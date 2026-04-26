@@ -7,6 +7,7 @@ public class Day {
     public Day(int index, String startTime, String endTime) {
         this.index = index;
         switch (index) {
+            default -> this.day = "Invalid";
             case 1 -> this.day = "Sunday";
             case 2 -> this.day = "Monday";
             case 3 -> this.day = "Tuesday";
@@ -24,7 +25,7 @@ public class Day {
             }
         }
         else {
-            this.startTime = Integer.parseInt(startTime) * 100;
+            this.startTime = Integer.parseInt(startTime);
         }
 
         if(endTime.contains(":")) {
@@ -35,7 +36,7 @@ public class Day {
             }
         }
         else {
-            this.endTime = Integer.parseInt(endTime) * 100;
+            this.endTime = Integer.parseInt(endTime);
         }
     }
 }

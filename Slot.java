@@ -13,9 +13,15 @@ public class Slot {
         this.uuid = UUID.randomUUID().toString();
         this.title = title;
         for(Day day : days) {
+            if(day != null){
             this.days[day.index - 1] = day;
+            }
         }
         this.description = description;
+    }
+
+    public String getTitle(){
+        return this.title;
     }
 
     public void editTitle(String newTitle) {
@@ -30,6 +36,15 @@ public class Slot {
         this.days[dayIndex - 1] = null;
     }
 
+    public int getCurrentDayIndex() {
+        for (int i = 0; i < 7; i++) {
+            if (days[i] != null) {
+                return i + 1;
+            }
+        }
+        return -1;
+    }
+
 
     public void editDescription(String newDescription) {
         this.description = newDescription;
@@ -37,6 +52,18 @@ public class Slot {
 
     public boolean checkConflict(Slot newSlot) {
         // Check if the days overlap from file storage
+        for(int i = 0; i < 7; i++){
+            Day dayOne= this.days[i];
+            Day dayTwo= newSlot.days[i];
+            
+            if(dayOne != null && dayTwo != null){
+                boolean overlaps= dayOne.startTime < dayTwo.endTime && dayTwo.startTime < dayOne.endTime;
+                
+                if(overlaps){
+                    return true;
+                }
+            }
+        }
         return false;
     }
-}
+} 

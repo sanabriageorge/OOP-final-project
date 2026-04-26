@@ -1,7 +1,73 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.io.*;
 
 public class Calendar {
+    private static final String FILE_NAME= "calendar.csv";
+
+    public static void saveToFile(){
+        //Saves slot to a file 
+        try {
+            FileWriter writer = new FileWriter(FILE_NAME);
+            for (Slot slot : slots) {
+                for (Day day : slot.days) {
+                    if (day != null) {
+                        writer.write(
+                            slot.uuid + "," +
+                            slot.title + "," +
+                            day.index + "," +
+                            formatTimeForFile(day.startTime) + "," +
+                            formatTimeForFile(day.endTime) + "," +
+                            slot.description + "\n"
+                        );
+                    }
+                }
+            }
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("Error ");
+        }
+    }
+    //Loads slot info from File storage
+    public static void loadFromFile() {
+        slots.clear();
+        try {
+            Scanner fileReader = new Scanner(new File(FILE_NAME));
+            while (fileReader.hasNextLine()) {
+                String line = fileReader.nextLine();
+                String[] parts = line.split(",");
+    
+                String title= parts[1];
+                int dayIndex= Integer.parseInt(parts[2]);
+                String startTime = parts[3];
+                String endTime = parts[4];
+                String description = parts[5];
+    
+                Day day = new Day(dayIndex, startTime, endTime);
+                Day[] days = new Day[7];
+                days[dayIndex - 1] = day;
+
+                Slot slot = new Slot(title, days, description);
+                slots.add(slot);
+            }
+            fileReader.close();
+    
+        } catch (FileNotFoundException e) {
+            System.out.println("No saved calendar file");
+        }
+    }
+
+    private static String formatTimeForFile(float time) {
+        //Format time to be put in file
+        int hour= (int) time;
+    
+        if (time % 1 == 0) {
+            return hour + ":00";
+        } else {
+            return hour + ":30";
+        }
+    }
+    
     private static final String BAR = "-".repeat(121) + "\n";
     public static ArrayList<Slot> slots = new ArrayList<>();
 
@@ -10,7 +76,18 @@ public class Calendar {
         // typically after new update/edit/delete
         return slots;
     }
-
+    public static boolean saveSlot(Slot slot){
+        for(Slot existingSlot : slots){
+            if(existingSlot.checkConflict(slot)){
+                System.out.println("Conflict");
+                return false;
+            }
+        }
+        slots.add(slot);
+        saveToFile();
+        System.out.println("Slot added");
+        return true;
+    }
     // User Flow:
     // User browse calendar/all slots
     // User selects slot 
@@ -20,38 +97,85 @@ public class Calendar {
     // Any untouched will remain the same.
     public static void editSlot(Slot slot, int option) {
         /*
-        1 - title
-        2 - days
-        3 - description
+        1 - change title 
+        2 - chnage the day 
+        3 - change start time
+        4 - change end time 
+        5 - change description
         */
        Scanner sc = new Scanner(System.in);
         switch(option) {
-            case 1 -> slot.editTitle(sc.nextLine());
-            case 2 -> {
-                String input = sc.nextLine();
-                String[] daysToEdit = input.split(",");
-                
-                for(String day : daysToEdit) {
-                    if(day.contains("delete")) {
-                        int dayToDelete = Integer.parseInt(day.trim().substring(0,1));
-                        slot.removeDay(dayToDelete);
-                    }
-                    else {
-                        String time = day.trim().substring(day.indexOf("("), day.indexOf(")"));
-                        String[] times = time.split("-");
-                        int index = Integer.parseInt(day.trim().substring(0,1));
-                        Day newDay = new Day(index, times[0], times[1]);
-                        slot.editDay(newDay);
-                    }
+            case 1:
+                System.out.println("New title:");
+                slot.editTitle(sc.nextLine());
+                break;
+            
+            case 2:
+                int currentIndex = slot.getCurrentDayIndex();
+
+                if (currentIndex == -1) {
+                System.out.println("No day exists for this slot.");
+                    break;
                 }
+
+                Day oldDay = slot.days[currentIndex - 1];
+                System.out.print("New day index (1-7): ");
+                int newIndex = Integer.parseInt(sc.nextLine());
+
+                Day newDay = new Day(newIndex, formatTimeForFile(oldDay.startTime), formatTimeForFile(oldDay.endTime));
+                slot.removeDay(currentIndex);
+                slot.editDay(newDay);
+                break;
+
+            case 3:
+                int startIndex = slot.getCurrentDayIndex();
+
+                if (startIndex == -1) {
+                    System.out.println("No day exists for this slot.");
+                    break;
+                }
+
+                Day startDay = slot.days[startIndex - 1];
+
+                System.out.print("New start time: ");
+                String newStart = sc.nextLine();
+
+                Day updatedStartDay = new Day(startIndex, newStart, formatTimeForFile(startDay.endTime));
+                slot.editDay(updatedStartDay);
+                break;
+
+            case 4:
+                int endIndex = slot.getCurrentDayIndex();
+
+                if (endIndex == -1) {
+                    System.out.println("No day exists for this slot.");
+                    break;
+                }
+
+                Day endDay = slot.days[endIndex - 1];
+
+                System.out.print("New end time: ");
+                String newEnd = sc.nextLine();
+
+                Day updatedEndDay = new Day(endIndex, formatTimeForFile(endDay.startTime), newEnd );
+                slot.editDay(updatedEndDay);
+                break;
+
+            case 5:
+                System.out.println("New description");
+                slot.editDescription(sc.nextLine());
+                break;
+            
+            default:
+                System.out.println("invalid Option");
             }
-            case 3 -> slot.editDescription(sc.nextLine());
+            saveToFile();
         }
-    }
 
     public static void deleteSlot(Slot slot) {
         // Remove slot from file storage
         slots.remove(slot);
+        saveToFile();
     }
 
     // simplfiying the print calendar to print from 8am-8pm
