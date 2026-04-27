@@ -1,6 +1,6 @@
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.io.*;
 
 public class Calendar {
     private static final String FILE_NAME= "calendar.csv";
@@ -76,6 +76,7 @@ public class Calendar {
         // typically after new update/edit/delete
         return slots;
     }
+    
     public static boolean saveSlot(Slot slot){
         for(Slot existingSlot : slots){
             if(existingSlot.checkConflict(slot)){
@@ -88,6 +89,7 @@ public class Calendar {
         System.out.println("Slot added");
         return true;
     }
+    
     // User Flow:
     // User browse calendar/all slots
     // User selects slot 
