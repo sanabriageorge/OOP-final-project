@@ -64,10 +64,13 @@ public class MainTerminal {
             System.out.println("3. Edit Start Time");
             System.out.println("4. Edit End Time");
             System.out.println("5. Edit Description");
+            System.out.println("6. Cancel");
             System.out.println("Choose Option: ");
 
             int option= Integer.parseInt(sc.nextLine());
-        
+            if(option == 6){
+                continue;
+            }
             Calendar.editSlot(slot, option);
         }
           else if (choice == 4) {
