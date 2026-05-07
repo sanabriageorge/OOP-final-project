@@ -4,15 +4,15 @@ A command-line Java application that allows users to create, view, edit, and del
 
 ## How to Run the Program 
 1. Clone the repo:
-   '''bash
+   ```bash
    git clone <repo-url>
-   '''
+   ```
 2. Compile all Java files:
-   '''bash
+   ```bash
    javac *.java
-   '''
+   ```
 3. Run the program:
-   '''bash
+   ```bash
    java MainTerminal
-   '''
+   ```
    
