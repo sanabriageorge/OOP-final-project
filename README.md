@@ -7,11 +7,15 @@ A command-line Java application that allows users to create, view, edit, and del
    ```bash
    git clone <repo-url>
    ```
-2. Compile all Java files:
+2. Navigate into project folder:
+    ```bash
+   cd OOP-final-project
+     ```
+3. Compile all Java files:
    ```bash
    javac *.java
    ```
-3. Run the program:
+4. Run the program:
    ```bash
    java MainTerminal
    ```
