@@ -19,9 +19,7 @@ public class MainTerminal {
       while (true) {
           System.out.println("\n1. Add Slot");
           System.out.println("2. View Calendar");
-          System.out.println("3. Edit Slot");
-          System.out.println("4. Delete Slot");
-          System.out.println("5. Exit");
+          System.out.println("3. Exit");
 
           System.out.print("Choose option: ");
 
@@ -51,39 +49,40 @@ public class MainTerminal {
           }
           else if (choice == 2) {
               Calendar.printCalendar();
+
+              System.out.println("1. Edit Slot");
+              System.out.println("2. Delete Slot");
+              System.out.println("3. Back");
+              System.out.print("Choose option: ");
+              int calChoice = Integer.parseInt(sc.nextLine());
+
+              if (calChoice == 1) {
+                  displaySlots();
+                  System.out.print("Select slot index: ");
+                  int index = Integer.parseInt(sc.nextLine());
+                  Slot slot = Calendar.slots.get(index);
+
+                  System.out.println("1. Edit Title");
+                  System.out.println("2. Edit Day");
+                  System.out.println("3. Edit Start Time");
+                  System.out.println("4. Edit End Time");
+                  System.out.println("5. Edit Description");
+                  System.out.println("6. Cancel");
+                  System.out.print("Choose Option: ");
+                  int option = Integer.parseInt(sc.nextLine());
+                  if (option != 6) {
+                      Calendar.editSlot(slot, option);
+                  }
+              } else if (calChoice == 2) {
+                  displaySlots();
+                  System.out.print("Select slot index to delete: ");
+                  int index = Integer.parseInt(sc.nextLine());
+                  Slot slot = Calendar.slots.get(index);
+                  Calendar.deleteSlot(slot);
+                  System.out.println("Slot deleted.");
+              }
           }
           else if (choice == 3) {
-            displaySlots();
-            System.out.print("Select slot index: ");
-            int index= Integer.parseInt(sc.nextLine());
-        
-            Slot slot= Calendar.slots.get(index);
-        
-            System.out.println("1. Edit Title");
-            System.out.println("2. Edit Day");
-            System.out.println("3. Edit Start Time");
-            System.out.println("4. Edit End Time");
-            System.out.println("5. Edit Description");
-            System.out.println("6. Cancel");
-            System.out.println("Choose Option: ");
-
-            int option= Integer.parseInt(sc.nextLine());
-            if(option == 6){
-                continue;
-            }
-            Calendar.editSlot(slot, option);
-        }
-          else if (choice == 4) {
-            displaySlots();
-            System.out.print("Select slot index to delete: ");
-            int index = Integer.parseInt(sc.nextLine());
-      
-            Slot slot = Calendar.slots.get(index);
-      
-            Calendar.deleteSlot(slot);
-            System.out.println("Slot deleted.");
-        }
-          else if (choice == 5) {
             System.out.println("Goodbye!");
             break;
         }
