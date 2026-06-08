@@ -71,7 +71,7 @@ public class MainTerminal {
                   System.out.print("Choose Option: ");
                   int option = Integer.parseInt(sc.nextLine());
                   if (option != 6) {
-                      Calendar.editSlot(slot, option);
+                      Calendar.editSlot(slot, option, sc);
                   }
               } else if (calChoice == 2) {
                   displaySlots();

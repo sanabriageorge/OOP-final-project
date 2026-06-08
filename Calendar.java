@@ -36,22 +36,36 @@ public class Calendar {
             while (fileReader.hasNextLine()) {
                 String line = fileReader.nextLine();
                 String[] parts = line.split(",");
-    
-                String title= parts[1];
-                int dayIndex= Integer.parseInt(parts[2]);
+
+                String uuid = parts[0];
+                String title = parts[1];
+                int dayIndex = Integer.parseInt(parts[2]);
                 String startTime = parts[3];
                 String endTime = parts[4];
                 String description = parts[5];
-    
-                Day day = new Day(dayIndex, startTime, endTime);
-                Day[] days = new Day[7];
-                days[dayIndex - 1] = day;
 
-                Slot slot = new Slot(title, days, description);
-                slots.add(slot);
+                Day day = new Day(dayIndex, startTime, endTime);
+
+                Slot existingSlot = null;
+                for (Slot s : slots) {
+                    if (s.uuid.equals(uuid)) {
+                        existingSlot = s;
+                        break;
+                    }
+                }
+
+                if (existingSlot != null) {
+                    existingSlot.editDay(day);
+                } else {
+                    Day[] days = new Day[7];
+                    days[dayIndex - 1] = day;
+                    Slot slot = new Slot(title, days, description);
+                    slot.uuid = uuid;
+                    slots.add(slot);
+                }
             }
             fileReader.close();
-    
+
         } catch (FileNotFoundException e) {
             System.out.println("No saved calendar file");
         }
@@ -97,15 +111,14 @@ public class Calendar {
     // If edit, User can edit title, days, time, description
     // If days, we ask user to input int(start-end) or int(delete)
     // Any untouched will remain the same.
-    public static void editSlot(Slot slot, int option) {
+    public static void editSlot(Slot slot, int option, Scanner sc) {
         /*
-        1 - change title 
-        2 - chnage the day 
+        1 - change title
+        2 - chnage the day
         3 - change start time
-        4 - change end time 
+        4 - change end time
         5 - change description
         */
-       Scanner sc = new Scanner(System.in);
         switch(option) {
             case 1:
                 System.out.println("New title:");
@@ -201,14 +214,17 @@ public class Calendar {
         timeSlot += "\t|";
 
         for(int day = 1; day <= 7; day++) {
+            boolean filled = false;
             for(Slot slot : slots) {
                 Day d = slot.days[day - 1];
                 if(d != null && slotTaken(d, hour)) {
                     timeSlot += String.format("%-10s\t |", slot.title);
+                    filled = true;
+                    break;
                 }
-                else {
-                    timeSlot += "\t \t |";
-                }
+            }
+            if (!filled) {
+                timeSlot += "\t \t |";
             }
         }
         return timeSlot + "\n";
